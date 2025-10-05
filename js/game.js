@@ -24,8 +24,8 @@ class Game {
         
         // Game settings
         this.enemySpawnTimer = 0;
-        this.enemySpawnInterval = 60; // frames
-        this.difficultyIncreaseInterval = 10000; // ms
+        this.enemySpawnInterval = 120; // frames (increased from 60 to spawn less frequently)
+        this.difficultyIncreaseInterval = 15000; // ms (increased from 10000 to slow difficulty ramp)
         this.lastDifficultyIncrease = 0;
         
         // Input handling
