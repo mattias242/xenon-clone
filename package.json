@@ -1,0 +1,40 @@
+{
+  "name": "xenon-clone",
+  "version": "1.0.0",
+  "description": "A faithful web-based recreation of the classic Amiga game Xenon (1988)",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo 'Tests run in browser console with testSuite.run()'",
+    "start": "echo 'Open index.html in browser to start development'",
+    "dev": "echo 'Run live-server for development (npm install -g live-server)'",
+    "build": "echo 'No build process needed - pure HTML/CSS/JS'",
+    "validate": "echo 'Run tests in browser console to validate'"
+  },
+  "keywords": [
+    "game",
+    "xenon",
+    "amiga",
+    "shoot-em-up",
+    "dual-mode",
+    "retro",
+    "browser-game"
+  ],
+  "author": "Mattias Wahlberg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattias242/xenon-clone.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mattias242/xenon-clone/issues"
+  },
+  "homepage": "https://github.com/mattias242/xenon-clone#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "html-validate": "^8.0.0",
+    "stylelint": "^15.0.0"
+  }
+}
