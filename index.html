@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xenon Clone</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+        <div id="hud">
+            <div id="score">Score: <span>0</span></div>
+            <div id="lives">Lives: <span>3</span></div>
+            <div id="level">Level: <span>1</span></div>
+        </div>
+        <div id="start-screen">
+            <h1>XENON CLONE</h1>
+            <p>Use arrow keys to move, Space to shoot</p>
+            <button id="start-button">Start Game</button>
+        </div>
+        <div id="game-over" class="hidden">
+            <h2>GAME OVER</h2>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/projectile.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
