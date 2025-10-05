@@ -184,8 +184,13 @@ class Enemy {
             // Create explosion effect
             this.game.createExplosion(this.x + this.width / 2, this.y + this.height / 2, this.type);
             
-            // Chance to drop power-up
-            if (Math.random() < 0.1) { // 10% chance for power-up
+            // Chance to drop power-up (varies by enemy type)
+            let powerUpChance = 0.15; // Base 15% chance
+            if (this.type === 'tank') powerUpChance = 0.4; // Tanks drop more often
+            else if (this.type === 'shooter') powerUpChance = 0.25; // Shooters drop moderately
+            else if (this.type === 'fast') powerUpChance = 0.1; // Fast enemies rarely drop
+            
+            if (Math.random() < powerUpChance) {
                 this.game.createPowerUp(this.x + this.width / 2, this.y + this.height / 2);
             }
             

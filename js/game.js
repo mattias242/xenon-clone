@@ -24,7 +24,7 @@ class Game {
         
         // Game settings
         this.enemySpawnTimer = 0;
-        this.enemySpawnInterval = 120; // frames (increased from 60 to spawn less frequently)
+        this.enemySpawnInterval = 180; // Increased from 120 for fewer enemies initially
         this.difficultyIncreaseInterval = 15000; // ms (increased from 10000 to slow difficulty ramp)
         this.lastDifficultyIncrease = 0;
         
@@ -292,8 +292,8 @@ class Game {
             this.spawnEnemy();
             this.enemySpawnTimer = 0;
             
-            // Randomly adjust spawn interval for some variety
-            this.enemySpawnInterval = Math.max(60, 150 - this.level * 3 + Math.random() * 40);
+            // Randomly adjust spawn interval for some variety (more gradual changes)
+            this.enemySpawnInterval = Math.max(90, 180 - this.level * 2 + Math.random() * 30);
         }
         
         // Increase difficulty over time
@@ -426,27 +426,33 @@ class Game {
     spawnEnemy() {
         const x = Math.random() * (this.width - 50) + 25;
         const y = -50;
-        
-        // Randomly choose enemy type based on level
+
+        // Improved enemy variation based on level with better distribution
         const rand = Math.random();
         let type;
-        
-        if (this.level < 3) {
+
+        if (this.level < 2) {
+            // Early levels: mostly basic enemies
             type = 'basic';
-        } else if (this.level < 6) {
-            if (rand < 0.8) type = 'basic';
-            else type = 'fast';
-        } else if (this.level < 10) {
-            if (rand < 0.6) type = 'basic';
+        } else if (this.level < 4) {
+            // Introduce fast enemies
+            if (rand < 0.7) type = 'basic';
             else if (rand < 0.9) type = 'fast';
+            else type = 'shooter';
+        } else if (this.level < 7) {
+            // Add tank enemies
+            if (rand < 0.5) type = 'basic';
+            else if (rand < 0.75) type = 'fast';
+            else if (rand < 0.9) type = 'shooter';
             else type = 'tank';
         } else {
-            if (rand < 0.5) type = 'basic';
-            else if (rand < 0.8) type = 'fast';
-            else if (rand < 0.95) type = 'tank';
-            else type = 'shooter';
+            // All enemy types available with good distribution
+            if (rand < 0.4) type = 'basic';
+            else if (rand < 0.65) type = 'fast';
+            else if (rand < 0.85) type = 'shooter';
+            else type = 'tank';
         }
-        
+
         this.enemies.push(new Enemy(this, x, y, type));
     }
     
@@ -560,8 +566,8 @@ class Game {
         this.level++;
         document.getElementById('level').textContent = `Level: ${this.level}`;
         
-        // Increase enemy speed and spawn rate based on level
-        this.enemySpawnInterval = Math.max(50, this.enemySpawnInterval - 3);
+        // Increase enemy speed and spawn rate based on level (more gradual)
+        this.enemySpawnInterval = Math.max(90, this.enemySpawnInterval - 2); // Reduced decrease for longer gameplay
         
         // Every 5 levels, increase max enemies and add more variety
         if (this.level % 5 === 0) {
