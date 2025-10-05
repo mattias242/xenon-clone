@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const weaponElement = document.getElementById('weapon');
     const bombsElement = document.getElementById('bombs');
 
+    // Get screen elements
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over');
+    const startButton = document.getElementById('start-button');
+    const restartButton = document.getElementById('restart-button');
+
     // Reset UI
     const resetUI = () => {
         scoreElement.textContent = 'Score: 0';

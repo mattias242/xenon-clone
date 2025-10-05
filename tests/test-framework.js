@@ -106,6 +106,12 @@ class GameTestSuite {
     assertLessThan(a, b, message = `${a} is not less than ${b}`) {
         this.assert(a < b, message);
     }
+
+    assertNotEquals(actual, expected, message = `Expected ${actual} to not equal ${expected}`) {
+        if (actual === expected) {
+            throw new Error(message);
+        }
+    }
 }
 
 // Create test suite instance
