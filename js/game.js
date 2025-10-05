@@ -24,7 +24,7 @@ class Game {
         
         // Game settings
         this.enemySpawnTimer = 0;
-        this.enemySpawnInterval = 180; // Increased from 120 for fewer enemies initially
+        this.enemySpawnInterval = 240; // Increased from 180 for even fewer enemies initially
         this.difficultyIncreaseInterval = 15000; // ms (increased from 10000 to slow difficulty ramp)
         this.lastDifficultyIncrease = 0;
         
@@ -43,7 +43,7 @@ class Game {
             ArrowRight: false,
             ArrowUp: false,
             ArrowDown: false,
-            ' ': false,
+            Space: false, // Space for shooting
             'x': false, // Transform key (Xenon authentic)
             'z': false, // Smart bomb key (Xenon authentic)
             p: false
@@ -96,13 +96,13 @@ class Game {
             if (e.code in this.keys) {
                 this.keys[e.code] = true;
                 
-                // Space to shoot
-                if (e.code === ' ' && !this.gameOver) {
+                // Space to shoot (immediate shooting, not held)
+                if (e.code === 'Space' && !this.gameOver) {
                     this.player.shoot();
                 }
                 
                 // P to pause
-                if (e.code === 'p') {
+                if (e.code === 'KeyP') {
                     this.togglePause();
                 }
             }
@@ -128,7 +128,7 @@ class Game {
         }, false);
         
         this.canvas.addEventListener('touchend', () => {
-            this.keys[' '] = false;
+            this.keys['Space'] = false;
         }, false);
     }
     
@@ -143,12 +143,12 @@ class Game {
 
         // Shoot if touching the bottom half of the screen
         if (y > this.height / 2) {
-            this.keys[' '] = true;
+            this.keys['Space'] = true;
             if (!this.gameOver) {
                 this.player.shoot();
             }
         } else {
-            this.keys[' '] = false;
+            this.keys['Space'] = false;
         }
 
         // Transform if touching right side
@@ -172,7 +172,7 @@ class Game {
         if (this.keys.ArrowDown) this.player.moveDown();
 
         // Shooting
-        if (this.keys[' ']) {
+        if (this.keys['Space']) {
             this.player.shoot();
         }
 
@@ -293,7 +293,7 @@ class Game {
             this.enemySpawnTimer = 0;
             
             // Randomly adjust spawn interval for some variety (more gradual changes)
-            this.enemySpawnInterval = Math.max(90, 180 - this.level * 2 + Math.random() * 30);
+            this.enemySpawnInterval = Math.max(120, 240 - this.level * 1 + Math.random() * 20);
         }
         
         // Increase difficulty over time
@@ -567,7 +567,7 @@ class Game {
         document.getElementById('level').textContent = `Level: ${this.level}`;
         
         // Increase enemy speed and spawn rate based on level (more gradual)
-        this.enemySpawnInterval = Math.max(90, this.enemySpawnInterval - 2); // Reduced decrease for longer gameplay
+        this.enemySpawnInterval = Math.max(120, this.enemySpawnInterval - 1); // Even more gradual decrease
         
         // Every 5 levels, increase max enemies and add more variety
         if (this.level % 5 === 0) {
