@@ -80,6 +80,47 @@ xenon-clone/
 - Higher difficulty enemies give more points
 - Survive longer to increase your level and score multiplier
 
+## 🧪 Testing & Development
+
+This project follows **Test Driven Development (TDD)** principles to ensure code quality and reliability.
+
+### Running Tests
+
+1. Open `index.html` in a web browser
+2. Open the browser's Developer Console (F12)
+3. The test suite will automatically run and display results
+
+Or run tests manually in the console:
+```javascript
+// Run all tests
+testSuite.run();
+
+// Run specific test categories
+// Player tests, Enemy tests, Projectile tests, Game tests
+```
+
+### Test Coverage
+
+The test suite includes comprehensive tests for:
+
+- **Player Class**: Movement, shooting, damage handling, invincibility
+- **Enemy Class**: All enemy types, AI behavior, damage systems
+- **Projectile Class**: Movement, collision detection, trail effects
+- **Game Class**: Game state management, collision detection, spawning
+
+### TDD Workflow
+
+1. **Write Test First** - Define expected behavior
+2. **Run Test** - Verify it fails (red)
+3. **Implement Code** - Make test pass (green)
+4. **Refactor** - Improve code while maintaining tests (blue)
+
+This ensures:
+- ✅ All features work as intended
+- ✅ No regressions when making changes
+- ✅ Easy debugging and maintenance
+- ✅ Confidence in code quality
+
 ## 🛠️ Technologies Used
 
 - **HTML5 Canvas**: For rendering graphics
