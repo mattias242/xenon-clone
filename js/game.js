@@ -28,6 +28,15 @@ class Game {
         this.difficultyIncreaseInterval = 15000; // ms (increased from 10000 to slow difficulty ramp)
         this.lastDifficultyIncrease = 0;
         
+        // Auto-scrolling (Xenon authentic)
+        this.scrollSpeed = 2; // pixels per frame
+        this.worldY = 0; // Current world position
+        
+        // Screen effects
+        this.screenShake = 0;
+        this.cameraX = 0;
+        this.cameraY = 0;
+        
         // Input handling
         this.keys = {
             ArrowLeft: false,
@@ -35,6 +44,8 @@ class Game {
             ArrowUp: false,
             ArrowDown: false,
             ' ': false,
+            'x': false, // Transform key (Xenon authentic)
+            'z': false, // Smart bomb key (Xenon authentic)
             p: false
         };
         
@@ -44,7 +55,9 @@ class Game {
             explosion: null,
             hit: null,
             powerup: null,
-            enemyShoot: null
+            enemyShoot: null,
+            transform: null,
+            smartbomb: null
         };
         
         // Initialize audio
@@ -123,11 +136,11 @@ class Game {
         const rect = this.canvas.getBoundingClientRect();
         const x = touch.clientX - rect.left;
         const y = touch.clientY - rect.top;
-        
+
         // Move player to touch position
         this.player.x = Math.max(0, Math.min(x - this.player.width / 2, this.width - this.player.width));
         this.player.y = Math.max(0, Math.min(y - this.player.height / 2, this.height - this.player.height));
-        
+
         // Shoot if touching the bottom half of the screen
         if (y > this.height / 2) {
             this.keys[' '] = true;
@@ -137,30 +150,53 @@ class Game {
         } else {
             this.keys[' '] = false;
         }
+
+        // Transform if touching right side
+        if (x > this.width * 0.7) {
+            this.player.transform();
+        }
+
+        // Smart bomb if touching left side
+        if (x < this.width * 0.3) {
+            this.player.useSmartBomb();
+        }
     }
     
     handleInput() {
         if (this.paused || this.gameOver) return;
-        
+
         // Player movement
         if (this.keys.ArrowLeft) this.player.moveLeft();
         if (this.keys.ArrowRight) this.player.moveRight();
         if (this.keys.ArrowUp) this.player.moveUp();
         if (this.keys.ArrowDown) this.player.moveDown();
-        
-        // Continuous shooting when space is held
+
+        // Shooting
         if (this.keys[' ']) {
             this.player.shoot();
+        }
+
+        // Transformation (Xenon authentic)
+        if (this.keys['x']) {
+            this.player.transform();
+        }
+
+        // Smart bomb (Xenon authentic)
+        if (this.keys['z']) {
+            this.player.useSmartBomb();
         }
     }
     
     update(deltaTime) {
         if (this.paused || this.gameOver) return;
         
+        // Update auto-scrolling (Xenon authentic)
+        this.worldY += this.scrollSpeed;
+        
         // Update player
         this.player.update();
         
-        // Update projectiles
+        // Update projectiles (relative to world position)
         for (let i = this.projectiles.length - 1; i >= 0; i--) {
             this.projectiles[i].update();
             
@@ -190,7 +226,7 @@ class Game {
             }
         }
         
-        // Update enemies
+        // Update enemies (relative to world position)
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             this.enemies[i].update(deltaTime);
             
@@ -266,15 +302,29 @@ class Game {
             this.increaseDifficulty();
             this.lastDifficultyIncrease = 0;
         }
+        
+        // Update screen shake
+        if (this.screenShake > 0) {
+            this.screenShake--;
+            this.cameraX = (Math.random() - 0.5) * 10;
+            this.cameraY = (Math.random() - 0.5) * 10;
+        } else {
+            this.cameraX = 0;
+            this.cameraY = 0;
+        }
     }
     
     draw() {
         // Clear canvas
         this.ctx.clearRect(0, 0, this.width, this.height);
-        
+
+        // Apply camera shake
+        this.ctx.save();
+        this.ctx.translate(this.cameraX, this.cameraY);
+
         // Draw starfield background
         this.drawStarfield();
-        
+
         // Draw all game objects
         this.powerUps.forEach(powerUp => powerUp.draw(this.ctx));
         this.enemies.forEach(enemy => enemy.draw(this.ctx));
@@ -282,15 +332,17 @@ class Game {
         this.player.draw(this.ctx);
         this.particles.forEach(particle => particle.draw(this.ctx));
         this.explosions.forEach(explosion => explosion.draw(this.ctx));
-        
-        // Draw HUD
+
+        this.ctx.restore();
+
+        // Draw HUD (not affected by camera shake)
         this.drawHUD();
-        
+
         // Draw pause overlay if game is paused
         if (this.paused) {
             this.drawPauseScreen();
         }
-        
+
         // Draw game over screen if game is over
         if (this.gameOver) {
             this.drawGameOver();
@@ -331,14 +383,16 @@ class Game {
     
     drawHUD() {
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.fillRect(10, 10, 150, 80);
-        
+        this.ctx.fillRect(10, 10, 200, 100);
+
         this.ctx.fillStyle = '#0f0';
         this.ctx.font = '20px "Courier New", monospace';
         this.ctx.textAlign = 'left';
         this.ctx.fillText(`Score: ${this.score}`, 20, 35);
         this.ctx.fillText(`Level: ${this.level}`, 20, 65);
         this.ctx.fillText(`Lives: ${this.player.lives}`, 20, 95);
+        this.ctx.fillText(`Weapon: L${this.player.weaponLevel}`, 20, 125);
+        this.ctx.fillText(`Bombs: ${this.player.powerUps.smartBombCount}`, 20, 155);
     }
     
     drawPauseScreen() {
@@ -451,12 +505,13 @@ class Game {
     
     createPowerUp(x, y) {
         const powerUps = [
-            { type: 'extraLife', color: '#0f0', text: '1UP' },
-            { type: 'weaponUpgrade', color: '#0ff', text: 'POW' },
-            { type: 'shield', color: '#00f', text: 'SHLD' },
-            { type: 'slowMotion', color: '#f0f', text: 'SLOW' }
+            { type: 'speed', color: '#ffff00', text: 'SPD' },
+            { type: 'weapon', color: '#00ffff', text: 'POW' },
+            { type: 'shield', color: '#0000ff', text: 'SHLD' },
+            { type: 'smartbomb', color: '#ff00ff', text: 'BOMB' },
+            { type: 'extraLife', color: '#00ff00', text: '1UP' }
         ];
-        
+
         const powerUp = powerUps[Math.floor(Math.random() * powerUps.length)];
         this.powerUps.push(new PowerUp(x, y, powerUp.type, powerUp.color, powerUp.text));
     }
@@ -474,6 +529,33 @@ class Game {
                rect1.y + rect1.height > rect2.y;
     }
     
+    useSmartBomb() {
+        // Clear all enemies on screen
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+            const enemy = this.enemies[i];
+
+            // Create explosion effect
+            this.createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, enemy.type);
+
+            // Remove enemy and add score
+            this.score += enemy.score;
+            this.enemies.splice(i, 1);
+        }
+
+        // Clear all enemy projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            if (!this.projectiles[i].isPlayerProjectile) {
+                this.projectiles.splice(i, 1);
+            }
+        }
+
+        // Update score display
+        document.getElementById('score').textContent = `Score: ${this.score}`;
+
+        // Screen shake effect
+        this.screenShake = 20; // frames
+    }
+
     increaseDifficulty() {
         this.level++;
         document.getElementById('level').textContent = `Level: ${this.level}`;
@@ -514,6 +596,10 @@ class Game {
         this.accumulator = 0;
         this.enemySpawnTimer = 0;
         this.lastDifficultyIncrease = 0;
+        this.worldY = 0;
+        this.screenShake = 0;
+        this.cameraX = 0;
+        this.cameraY = 0;
         
         // Clear all game objects
         this.projectiles = [];
@@ -855,21 +941,29 @@ class PowerUp {
                 player.lives = Math.min(player.maxLives, player.lives + 1);
                 document.getElementById('lives').textContent = `Lives: ${player.lives}`;
                 break;
-                
-            case 'weaponUpgrade':
-                // In a more complete game, this would upgrade the player's weapon
-                player.shootCooldownMax = Math.max(5, player.shootCooldownMax - 2);
+
+            case 'weapon':
+                if (player.weaponLevel < player.maxWeaponLevel) {
+                    player.weaponLevel++;
+                    // Update weapon level display
+                    document.getElementById('weapon').textContent = `Weapon: L${player.weaponLevel}`;
+                }
                 break;
-                
+
             case 'shield':
-                // Make player temporarily invincible
-                player.isInvincible = true;
-                player.invincibleTimer = 0;
+                player.powerUps.shield = true;
+                player.powerUps.shieldTimer = 300; // 5 seconds
                 break;
-                
-            case 'slowMotion':
-                // Slow down enemies for a short time
-                // This would be implemented in the game's update loop
+
+            case 'speed':
+                player.powerUps.speedBoost = true;
+                player.powerUps.speedBoostTimer = 600; // 10 seconds
+                player.speed = (player.mode === 'aircraft' ? player.aircraft.speed : player.tank.speed) * 1.5;
+                break;
+
+            case 'smartbomb':
+                player.powerUps.smartBombCount++;
+                document.getElementById('bombs').textContent = `Bombs: ${player.powerUps.smartBombCount}`;
                 break;
         }
     }

@@ -37,6 +37,7 @@ body {
     display: flex;
     gap: 20px;
     pointer-events: none;
+    flex-wrap: wrap;
 }
 
 #start-screen, #game-over {
