@@ -257,7 +257,7 @@ class Game {
             this.enemySpawnTimer = 0;
             
             // Randomly adjust spawn interval for some variety
-            this.enemySpawnInterval = Math.max(30, 90 - this.level * 2 + Math.random() * 30);
+            this.enemySpawnInterval = Math.max(60, 150 - this.level * 3 + Math.random() * 40);
         }
         
         // Increase difficulty over time
@@ -479,7 +479,7 @@ class Game {
         document.getElementById('level').textContent = `Level: ${this.level}`;
         
         // Increase enemy speed and spawn rate based on level
-        this.enemySpawnInterval = Math.max(20, this.enemySpawnInterval - 2);
+        this.enemySpawnInterval = Math.max(50, this.enemySpawnInterval - 3);
         
         // Every 5 levels, increase max enemies and add more variety
         if (this.level % 5 === 0) {
