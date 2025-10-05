@@ -1,47 +1,82 @@
-# Xenon Clone
+# Xenon Clone - Authentic Recreation
 
-A simplified web-based clone of the classic Amiga game Xenon, built with vanilla JavaScript and HTML5 Canvas.
+A faithful web-based recreation of the classic Amiga game **Xenon** (1988), featuring the iconic dual-mode ship system and authentic gameplay mechanics.
 
-![Game Screenshot](screenshot.png)
+## 🎮 Authentic Xenon Features
 
-## 🎮 Features
-
-- **Classic Shoot 'em Up Gameplay**: Vertical scrolling shooter inspired by the Amiga classic
-- **Multiple Enemy Types**: 
-  - Basic enemies with random movement patterns
-  - Fast enemies for quick challenges
-  - Tank enemies with high health
-  - Shooter enemies that fire back
-- **Power-ups**: Collect various power-ups including extra lives, weapon upgrades, and shields
-- **Progressive Difficulty**: Game gets harder as you advance through levels
-- **Visual Effects**: Particle explosions, projectile trails, and smooth animations
+- **Dual-Mode Ship System**: Transform between Aircraft and Tank modes (X key)
+- **Auto-Scrolling Gameplay**: Screen scrolls vertically at constant pace
+- **Progressive Weapon System**: 4 weapon levels with different firing patterns
+- **Smart Bomb System**: Screen-clearing bombs (Z key)
+- **Authentic Power-ups**: Speed, Weapon, Shield, Smart Bomb, Extra Life
+- **Enemy Variety**: Different enemy types with unique behaviors
+- **Visual Effects**: Particle explosions, screen shake, engine glow
 - **Responsive Controls**: Works on both desktop (keyboard) and mobile (touch)
-- **Retro Aesthetic**: Green monochrome UI with classic arcade feel
 
-## 🕹️ How to Play
+## 🕹️ Controls
 
-### Desktop Controls
-- **Arrow Keys**: Move your spaceship
+### Desktop
+- **Arrow Keys**: Move ship
 - **Space**: Shoot
-- **P**: Pause/Resume game
+- **X**: Transform between Aircraft/Tank modes
+- **Z**: Use Smart Bomb
+- **P**: Pause/Resume
 - **R**: Restart after game over
 
-### Mobile Controls
-- **Touch**: Tap and drag to move your ship
-- **Auto-fire**: Ship automatically fires when touching the screen
+### Mobile
+- **Touch & Drag**: Move ship
+- **Touch Bottom**: Shoot
+- **Touch Left Side**: Smart Bomb
+- **Touch Right Side**: Transform
+- **Tap**: Restart after game over
 
-## 🚀 Getting Started
+## 🚀 Ship Modes
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/xenon-clone.git
-   ```
+### Aircraft Mode (Default)
+- **Faster movement** (6 pixels/frame)
+- **Shoots straight ahead**
+- **More vulnerable** to ground enemies
+- **Better for dodging** aerial threats
 
-2. Open `index.html` in a modern web browser
+### Tank Mode (Press X)
+- **Slower movement** (3 pixels/frame)
+- **Shoots upward at angle**
+- **More protected** from aerial enemies
+- **Better firepower** against ground targets
 
-3. Click "Start Game" and enjoy!
+## 🔫 Weapon Progression
 
-No build process or dependencies required - just open and play!
+**Level 1**: Single shot
+**Level 2**: Dual shots
+**Level 3**: Triple spread
+**Level 4**: Wide spread with increased fire rate
+
+## 💥 Power-ups
+
+- **SPD (Yellow)**: Speed boost (10 seconds)
+- **POW (Cyan)**: Weapon upgrade
+- **SHLD (Blue)**: Temporary shield (5 seconds)
+- **BOMB (Magenta)**: Smart bomb
+- **1UP (Green)**: Extra life
+
+## 🎯 Gameplay
+
+The game features **auto-scrolling** - the screen moves upward at a constant pace, creating tension as enemies approach from above. Use the **dual-mode system** strategically:
+
+- **Aircraft mode** for speed and aerial combat
+- **Tank mode** for ground-based threats and precision shooting
+- **Smart bombs** to clear overwhelming situations
+- **Weapon upgrades** to increase firepower
+
+## 🛠️ Technical Implementation
+
+- **Pure JavaScript**: No frameworks, vanilla implementation
+- **HTML5 Canvas**: Hardware-accelerated rendering
+- **60 FPS Game Loop**: Smooth, responsive gameplay
+- **Collision Detection**: Precise hit detection
+- **Particle Effects**: Visual feedback for explosions
+- **Screen Shake**: Impact feedback for smart bombs
+- **Responsive Design**: Works on desktop and mobile
 
 ## 📁 Project Structure
 
@@ -52,91 +87,36 @@ xenon-clone/
 │   └── style.css       # Game styling
 ├── js/
 │   ├── game.js         # Core game logic and management
-│   ├── player.js       # Player ship class
-│   ├── enemy.js        # Enemy ship classes
+│   ├── player.js       # Dual-mode ship system
+│   ├── enemy.js        # Enemy AI and behaviors
 │   ├── projectile.js   # Projectile and weapon system
 │   └── main.js         # Game initialization
-└── assets/
-    ├── images/         # (Future: sprite images)
-    └── sounds/         # (Future: sound effects)
+└── tests/              # TDD test suite
+    ├── test-framework.js
+    ├── player-tests.js
+    ├── enemy-tests.js
+    ├── projectile-tests.js
+    └── game-tests.js
 ```
 
-## 🎯 Game Mechanics
+## 🧪 Testing
 
-### Enemy Types
-- **Basic (Red)**: Standard enemy with wavy movement - 100 points
-- **Fast (Yellow)**: Quick moving enemy - 200 points
-- **Tank (Magenta)**: High health, slow moving - 1000 points
-- **Shooter (Cyan)**: Fires projectiles at the player - 500 points
+This project uses **Test Driven Development (TDD)** with comprehensive test coverage:
 
-### Power-ups
-- **1UP (Green)**: Extra life
-- **POW (Cyan)**: Weapon upgrade (faster fire rate)
-- **SHLD (Blue)**: Temporary invincibility
-- **SLOW (Magenta)**: Slow motion effect
-
-### Scoring
-- Destroy enemies to earn points
-- Higher difficulty enemies give more points
-- Survive longer to increase your level and score multiplier
-
-## 🧪 Testing & Development
-
-This project follows **Test Driven Development (TDD)** principles to ensure code quality and reliability.
-
-### Running Tests
-
-1. Open `index.html` in a web browser
-2. Open the browser's Developer Console (F12)
-3. The test suite will automatically run and display results
-
-Or run tests manually in the console:
 ```javascript
-// Run all tests
+// Run tests in browser console
 testSuite.run();
-
-// Run specific test categories
-// Player tests, Enemy tests, Projectile tests, Game tests
 ```
-
-### Test Coverage
-
-The test suite includes comprehensive tests for:
-
-- **Player Class**: Movement, shooting, damage handling, invincibility
-- **Enemy Class**: All enemy types, AI behavior, damage systems
-- **Projectile Class**: Movement, collision detection, trail effects
-- **Game Class**: Game state management, collision detection, spawning
-
-### TDD Workflow
-
-1. **Write Test First** - Define expected behavior
-2. **Run Test** - Verify it fails (red)
-3. **Implement Code** - Make test pass (green)
-4. **Refactor** - Improve code while maintaining tests (blue)
-
-This ensures:
-- ✅ All features work as intended
-- ✅ No regressions when making changes
-- ✅ Easy debugging and maintenance
-- ✅ Confidence in code quality
-
-## 🛠️ Technologies Used
-
-- **HTML5 Canvas**: For rendering graphics
-- **Vanilla JavaScript**: No frameworks, pure JS
-- **CSS3**: For UI styling
 
 ## 🎨 Future Enhancements
 
-- [ ] Add sound effects and background music
-- [ ] Implement boss battles
-- [ ] Add more weapon types
-- [ ] Create different level backgrounds
-- [ ] Add high score persistence (localStorage)
-- [ ] Implement combo system
-- [ ] Add more power-up types
-- [ ] Create sprite-based graphics
+- [ ] Sound effects and chiptune music
+- [ ] Multiple level themes (Industrial, Organic, Crystal, etc.)
+- [ ] Boss battles
+- [ ] High score persistence
+- [ ] More enemy types and formations
+- [ ] Sprite-based graphics
+- [ ] Level editor
 
 ## 📝 License
 
@@ -144,12 +124,8 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Credits
 
-Inspired by the classic Amiga game **Xenon** by The Bitmap Brothers.
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+Faithfully recreated from **Xenon** (1988) by The Bitmap Brothers for the Commodore Amiga.
 
 ---
 
-Made with ❤️ for retro gaming enthusiasts
+Made with ❤️ for retro gaming enthusiasts and fans of The Bitmap Brothers
