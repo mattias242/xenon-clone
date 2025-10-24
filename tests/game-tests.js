@@ -139,8 +139,8 @@ testSuite.it('should handle game over state correctly', () => {
 
     testSuite.assertEquals(game.gameOver, false, 'Game should not be over initially');
 
-    game.gameOver();
-    testSuite.assertEquals(game.gameOver, true, 'Game should be over after calling gameOver()');
+    game.endGame();
+    testSuite.assertEquals(game.gameOver, true, 'Game should be over after calling endGame()');
 });
 
 testSuite.it('should reset game state correctly', () => {

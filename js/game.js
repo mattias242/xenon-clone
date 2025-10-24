@@ -581,7 +581,7 @@ class Game {
         }
     }
     
-    gameOver() {
+    endGame() {
         this.gameOver = true;
         document.getElementById('final-score').textContent = this.score;
         document.getElementById('game-over').style.display = 'flex';

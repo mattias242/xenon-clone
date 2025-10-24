@@ -310,7 +310,7 @@ class Player {
 
             // Different shooting patterns based on weapon level and mode
             if (this.mode === 'aircraft') {
-                this.shootAircraft( shootX);
+                this.shootAircraft(shootX);
             } else {
                 this.shootTank(shootX);
             }
@@ -434,7 +434,7 @@ class Player {
         document.getElementById('lives').textContent = `Lives: ${this.lives}`;
 
         if (this.lives <= 0) {
-            this.game.gameOver();
+            this.game.endGame();
         }
 
         return true;

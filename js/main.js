@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const livesElement = document.getElementById('lives');
     const weaponElement = document.getElementById('weapon');
     const bombsElement = document.getElementById('bombs');
+    const startButton = document.getElementById('start-button');
+    const restartButton = document.getElementById('restart-button');
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over');
 
     // Reset UI
     const resetUI = () => {
